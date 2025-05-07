@@ -34,8 +34,13 @@ function MainPage() {
   } = useCityFilters(cities);
 
   return (
-    <Flex p={[2, 10]} flexDir="column" gap={8}>
-      <Flex gap={8} flexDir={["column", "row"]} align="flex-start">
+    <Flex height="100vh" p={[2, 10]} flexDir="column" gap={8}>
+      <Flex
+        gap={8}
+        flexDir={["column", "row"]}
+        align="flex-start"
+        flexShrink={0}
+      >
         <Flex flexDir="column" gap={2}>
           <Text>Search</Text>
           <InputGroup minW={300}>
@@ -112,8 +117,10 @@ function MainPage() {
         <Box fontSize="2xl">No Cities Found!</Box>
       ) : (
         <Box
+          flex={1}
           display="flex"
           flexWrap="wrap"
+          overflow="auto"
           gap={[4, 8]}
           justifyContent={["center", "flex-start"]}
         >
