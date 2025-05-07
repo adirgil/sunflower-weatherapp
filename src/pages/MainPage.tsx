@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { cities } from "../data/citiesData";
 import {
   Box,
@@ -12,51 +12,28 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { StringParam, useQueryParam } from "use-query-params";
-import { point } from "@turf/helpers";
-import distance from "@turf/distance";
 import { CloseIcon } from "@chakra-ui/icons";
 import { ContinentSelect } from "../components/ContinentSelect";
 import { CityCard } from "../components/CityCard";
 import { City } from "../types/City";
-
-const userLocation = { lat: 32.0853, lng: 34.7818 }; // Tel Aviv
+import { useCityFilters } from "../hooks/useCityFilters";
 
 function MainPage() {
   console.log("Cities data:", cities);
-  const [search, setSearch] = useQueryParam("search", StringParam);
-  const [sort, setSort] = useQueryParam("sort", StringParam);
-  const [continent, setContinent] = useQueryParam("continent", StringParam);
-  const [unit, setUnit] = useQueryParam("unit", StringParam);
 
+  const [unit, setUnit] = useQueryParam("unit", StringParam);
   const tempUnit = unit || "c";
 
-  const allContinents: string[] = useMemo(() => {
-    return Array.from(new Set(cities.map((c) => c.continent)));
-  }, []);
-
-  const filteredCities: City[] = useMemo(() => {
-    const query = (search || "").toLowerCase();
-
-    let result = cities.filter(
-      (city) =>
-        (city.name.toLowerCase().includes(query) ||
-          city.country.toLowerCase().includes(query)) &&
-        (!continent || city.continent === continent)
-    );
-
-    if (sort === "distance") {
-      const from = point([userLocation.lng, userLocation.lat]);
-      result.sort((a, b) => {
-        const distA = distance(from, point([a.coords.lng, a.coords.lat]));
-        const distB = distance(from, point([b.coords.lng, b.coords.lat]));
-        return distA - distB;
-      });
-    } else {
-      result.sort((a, b) => a.name.localeCompare(b.name));
-    }
-
-    return result;
-  }, [search, sort, continent]);
+  const {
+    search,
+    setSearch,
+    sort,
+    setSort,
+    continent,
+    setContinent,
+    allContinents,
+    filteredCities,
+  } = useCityFilters(cities);
 
   return (
     <Flex p={[2, 10]} flexDir="column" gap={8}>
@@ -142,11 +119,9 @@ function MainPage() {
           gap={[4, 8]}
           justifyContent={["center", "flex-start"]}
         >
-          {filteredCities
-            .filter((city) => city.active)
-            .map((city: City) => (
-              <CityCard city={city} key={city.id} />
-            ))}
+          {filteredCities.map((city: City) => (
+            <CityCard city={city} key={city.id} />
+          ))}
         </Box>
       )}
     </Flex>

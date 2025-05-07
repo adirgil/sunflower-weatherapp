@@ -11,3 +11,7 @@ export type City = {
     lng: number;
   };
 };
+
+export type UseCityFiltersOptions = {
+  onlyActive?: boolean;
+};
