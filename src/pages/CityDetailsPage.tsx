@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Box, Text, Spinner, Flex, Button } from "@chakra-ui/react";
 import { cities } from "../data/citiesData";
+import { motion } from "framer-motion";
 
 const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
 
@@ -20,6 +21,8 @@ const CityDetailsPage = () => {
   const symbol = unit === "f" ? "°F" : "°C";
 
   console.log("weather", weather);
+
+  const MotionBox = motion(Box);
 
   useEffect(() => {
     if (!city) return;
@@ -48,15 +51,17 @@ const CityDetailsPage = () => {
   if (loading) return <Spinner />;
 
   return (
-    <Box
+    <MotionBox
       p={6}
       bg="gray.50"
       borderRadius="md"
       boxShadow="lg"
-      maxW="md"
-      mx={40}
-      my={40}
+      maxW="xl"
+      m={10}
       textAlign="center"
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1.5, ease: "easeOut" }}
     >
       <Box mb={6}>
         <Button
@@ -110,7 +115,7 @@ const CityDetailsPage = () => {
           <Text>{weather.wind.speed} m/s</Text>
         </Box>
       </Flex>
-    </Box>
+    </MotionBox>
   );
 };
 

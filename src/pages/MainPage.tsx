@@ -20,6 +20,7 @@ import { StringParam, useQueryParam } from "use-query-params";
 import { point } from "@turf/helpers";
 import distance from "@turf/distance";
 import { ChevronDownIcon, CloseIcon } from "@chakra-ui/icons";
+import { motion } from "framer-motion";
 
 const ContinentSelect = ({
   value,
@@ -70,6 +71,8 @@ function MainPage() {
   const [continent, setContinent] = useQueryParam("continent", StringParam);
   const [unit, setUnit] = useQueryParam("unit", StringParam);
 
+  const MotionBox = motion(Box);
+
   const tempUnit = unit || "c";
 
   const allContinents = useMemo(() => {
@@ -104,11 +107,7 @@ function MainPage() {
 
   return (
     <Flex p={[2, 10]} flexDir="column" gap={8}>
-      <Flex
-        gap={8}
-        flexDir={["column", "row"]} // column on mobile, row on larger screens
-        align="flex-start"
-      >
+      <Flex gap={8} flexDir={["column", "row"]} align="flex-start">
         <Flex flexDir="column" gap={2}>
           <Text>Search</Text>
           <InputGroup minW={300}>
@@ -193,7 +192,7 @@ function MainPage() {
           {filteredCities
             .filter((city) => city.active)
             .map(({ id, image, name, country, description }: City) => (
-              <Box
+              <MotionBox
                 w={[180, 250]}
                 h={[180, 250]}
                 p={6}
@@ -205,6 +204,11 @@ function MainPage() {
                 bgColor="blackAlpha.600"
                 bgBlendMode="overlay"
                 cursor="pointer"
+                whileHover={{
+                  scale: 1.1,
+                  boxShadow: "0 0 16px rgba(255, 255, 255, 0.4)",
+                }}
+                transition={{ type: "spring", stiffness: 150 }}
                 onClick={() => {
                   navigate(`/city/${id}`);
                 }}
@@ -218,7 +222,7 @@ function MainPage() {
                 <Text fontSize="xs" color="white" mt={2} noOfLines={[3, 0]}>
                   {description}
                 </Text>
-              </Box>
+              </MotionBox>
             ))}
         </Box>
       )}
