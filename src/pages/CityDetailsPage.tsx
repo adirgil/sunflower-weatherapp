@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
-import { Box, Text, Spinner } from "@chakra-ui/react";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { Box, Text, Spinner, Flex, Button } from "@chakra-ui/react";
 import { cities } from "../data/citiesData";
 
 const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
@@ -13,6 +13,8 @@ const CityDetailsPage = () => {
   const city = cities.find((c) => c.id.toString() === cityId);
   const [weather, setWeather] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate();
 
   const units = unit === "f" ? "imperial" : "metric";
   const symbol = unit === "f" ? "°F" : "°C";
@@ -46,28 +48,68 @@ const CityDetailsPage = () => {
   if (loading) return <Spinner />;
 
   return (
-    <Box p={6}>
+    <Box
+      p={6}
+      bg="gray.50"
+      borderRadius="md"
+      boxShadow="lg"
+      maxW="md"
+      mx={40}
+      my={40}
+      textAlign="center"
+    >
+      <Box mb={6}>
+        <Button
+          onClick={() => navigate(-1)}
+          colorScheme="blue"
+          variant="outline"
+          size="sm"
+        >
+          ← Back to Cities
+        </Button>
+      </Box>
       <Text fontSize="3xl" mb={2}>
-        Current Weather in {city.name}, {city.country}
+        Weather in {city.name}, {city.country}
       </Text>
-
-      <Text fontSize="xl">
-        {weather.weather[0].description} — {weather.main.temp}
+      <Box mb={4}>
+        <img
+          src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
+          alt={weather.weather[0].description}
+          style={{ margin: "0 auto" }}
+        />
+      </Box>
+      <Text fontSize="4xl" fontWeight="bold" mb={1}>
+        {Math.round(weather.main.temp)}
         {symbol}
       </Text>
-
-      <Text fontSize="sm" mt={2}>
-        Feels like: {weather.main.feels_like}
-        {symbol}
+      <Text fontSize="md" color="gray.600" textTransform="capitalize">
+        {weather.weather[0].description}
       </Text>
-
-      <Text fontSize="sm" mt={1}>
-        Humidity: {weather.main.humidity}%
-      </Text>
-
-      <Text fontSize="sm" mt={1}>
-        Wind: {weather.wind.speed} m/s
-      </Text>
+      <Flex
+        justify="space-around"
+        align="center"
+        mt={4}
+        fontSize="sm"
+        color="gray.600"
+        flexWrap="wrap"
+        gap={2}
+      >
+        <Box>
+          <Text fontWeight="medium">Feels like</Text>
+          <Text>
+            {Math.round(weather.main.feels_like)}
+            {symbol}
+          </Text>
+        </Box>
+        <Box>
+          <Text fontWeight="medium">Humidity</Text>
+          <Text>{weather.main.humidity}%</Text>
+        </Box>
+        <Box>
+          <Text fontWeight="medium">Wind</Text>
+          <Text>{weather.wind.speed} m/s</Text>
+        </Box>
+      </Flex>
     </Box>
   );
 };
