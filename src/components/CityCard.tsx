@@ -15,7 +15,7 @@ export function CityCard({ city }: { city: City }) {
       p={6}
       borderRadius="md"
       key={id}
-      boxShadow="dark-lg"
+      boxShadow="lg"
       bgImage={`url(${image})`}
       bgSize="cover"
       bgColor="blackAlpha.600"

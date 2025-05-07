@@ -121,6 +121,7 @@ function MainPage() {
           display="flex"
           flexWrap="wrap"
           overflow="auto"
+          p={[0, 4]}
           gap={[4, 8]}
           justifyContent={["center", "flex-start"]}
         >
