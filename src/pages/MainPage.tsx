@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { cities, City } from "../data/citiesData";
+import { cities } from "../data/citiesData";
 import {
   Box,
   Button,
@@ -9,69 +9,24 @@ import {
   Input,
   InputGroup,
   InputRightElement,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Text,
 } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
 import { StringParam, useQueryParam } from "use-query-params";
 import { point } from "@turf/helpers";
 import distance from "@turf/distance";
-import { ChevronDownIcon, CloseIcon } from "@chakra-ui/icons";
-import { motion } from "framer-motion";
-
-const ContinentSelect = ({
-  value,
-  onChange,
-  options,
-}: {
-  value: string | null | undefined;
-  onChange: (val: string | undefined) => void;
-  options: string[];
-}) => {
-  return (
-    <Menu>
-      <MenuButton
-        as={Button}
-        rightIcon={<ChevronDownIcon />}
-        bg="white"
-        boxShadow="inset 0 0 6px rgba(0, 0, 0, 0.3)"
-        textAlign="left"
-        w="200px"
-      >
-        <Text fontSize="sm">{value || "All Continents"}</Text>
-      </MenuButton>
-      <MenuList zIndex={10}>
-        <MenuItem fontSize="sm" onClick={() => onChange(undefined)}>
-          All
-        </MenuItem>
-        {options.map((continent) => (
-          <MenuItem
-            key={continent}
-            fontSize="sm"
-            onClick={() => onChange(continent)}
-          >
-            {continent}
-          </MenuItem>
-        ))}
-      </MenuList>
-    </Menu>
-  );
-};
+import { CloseIcon } from "@chakra-ui/icons";
+import { ContinentSelect } from "../components/ContinentSelect";
+import { CityCard } from "../components/CityCard";
+import { City } from "../types/City";
 
 const userLocation = { lat: 32.0853, lng: 34.7818 }; // Tel Aviv
 
 function MainPage() {
   console.log("Cities data:", cities);
-  const navigate = useNavigate();
   const [search, setSearch] = useQueryParam("search", StringParam);
   const [sort, setSort] = useQueryParam("sort", StringParam);
   const [continent, setContinent] = useQueryParam("continent", StringParam);
   const [unit, setUnit] = useQueryParam("unit", StringParam);
-
-  const MotionBox = motion(Box);
 
   const tempUnit = unit || "c";
 
@@ -89,9 +44,7 @@ function MainPage() {
         (!continent || city.continent === continent)
     );
 
-    if (sort === "country") {
-      result.sort((a, b) => a.country.localeCompare(b.country));
-    } else if (sort === "distance") {
+    if (sort === "distance") {
       const from = point([userLocation.lng, userLocation.lat]);
       result.sort((a, b) => {
         const distA = distance(from, point([a.coords.lng, a.coords.lat]));
@@ -191,38 +144,8 @@ function MainPage() {
         >
           {filteredCities
             .filter((city) => city.active)
-            .map(({ id, image, name, country, description }: City) => (
-              <MotionBox
-                w={[180, 250]}
-                h={[180, 250]}
-                p={6}
-                borderRadius="md"
-                key={id}
-                boxShadow="dark-lg"
-                bgImage={`url(${image})`}
-                bgSize="cover"
-                bgColor="blackAlpha.600"
-                bgBlendMode="overlay"
-                cursor="pointer"
-                whileHover={{
-                  scale: 1.1,
-                  boxShadow: "0 0 16px rgba(255, 255, 255, 0.4)",
-                }}
-                transition={{ type: "spring", stiffness: 150 }}
-                onClick={() => {
-                  navigate(`/city/${id}`);
-                }}
-              >
-                <Text fontSize={["md", "2xl"]} color="white">
-                  {name}
-                </Text>
-                <Text fontSize={["sm", "xl"]} color="white">
-                  {country}
-                </Text>
-                <Text fontSize="xs" color="white" mt={2} noOfLines={[3, 0]}>
-                  {description}
-                </Text>
-              </MotionBox>
+            .map((city: City) => (
+              <CityCard city={city} key={city.id} />
             ))}
         </Box>
       )}
