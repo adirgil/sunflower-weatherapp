@@ -56,7 +56,12 @@ const CityDetailsPage = () => {
   }, [city, units]);
 
   if (!city) return <Text>City not found</Text>;
-  if (loading) return <Spinner />;
+  if (loading)
+    return (
+      <Box w="full" display="flex" justifyContent="center" mt="100px">
+        <Spinner size="xl" />
+      </Box>
+    );
 
   return (
     <MotionBox
