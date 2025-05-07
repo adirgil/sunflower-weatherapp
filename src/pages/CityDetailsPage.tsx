@@ -24,8 +24,6 @@ const CityDetailsPage = () => {
     units
   );
 
-  console.log("weather", weather);
-
   if (!city) return <Text>City not found</Text>;
   if (error) return <Text>{error}</Text>;
   if (loading)

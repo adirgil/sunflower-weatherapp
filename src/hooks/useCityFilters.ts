@@ -16,8 +16,6 @@ export function useCityFilters(
 
   const onlyActive = options?.onlyActive !== false;
 
-  console.log("onlyActive", onlyActive);
-
   const allContinents = useMemo(() => {
     return Array.from(new Set(cities.map((c) => c.continent)));
   }, [cities]);

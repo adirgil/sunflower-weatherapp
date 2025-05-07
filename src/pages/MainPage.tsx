@@ -19,8 +19,6 @@ import { City } from "../types/City";
 import { useCityFilters } from "../hooks/useCityFilters";
 
 function MainPage() {
-  console.log("Cities data:", cities);
-
   const [unit, setUnit] = useQueryParam("unit", StringParam);
   const tempUnit = unit || "c";
 

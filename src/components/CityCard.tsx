@@ -27,7 +27,7 @@ export function CityCard({ city }: { city: City }) {
       }}
       transition={{ type: "spring", stiffness: 150 }}
       onClick={() => {
-        navigate(`/city/${id}`);
+        navigate(`/city/${id}${window.location.search}`);
       }}
     >
       <Text fontSize={["md", "2xl"]} color="white">
