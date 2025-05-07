@@ -75,11 +75,11 @@ function MainPage() {
 
   const tempUnit = unit || "c";
 
-  const allContinents = useMemo(() => {
+  const allContinents: string[] = useMemo(() => {
     return Array.from(new Set(cities.map((c) => c.continent)));
   }, []);
 
-  const filteredCities = useMemo(() => {
+  const filteredCities: City[] = useMemo(() => {
     const query = (search || "").toLowerCase();
 
     let result = cities.filter(

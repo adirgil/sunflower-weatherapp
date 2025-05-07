@@ -6,13 +6,21 @@ import { motion } from "framer-motion";
 
 const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
 
+type WeatherResponse = {
+  weather: { description: string; icon: string }[];
+  main: { temp: number; feels_like: number; humidity: number };
+  wind: { speed: number };
+};
+
 const CityDetailsPage = () => {
-  const { cityId } = useParams();
+  const { cityId } = useParams<{ cityId: string }>();
   const [searchParams] = useSearchParams();
   const unit = searchParams.get("unit") || "c";
 
   const city = cities.find((c) => c.id.toString() === cityId);
-  const [weather, setWeather] = useState<any>(null);
+  const [weather, setWeather] = useState<WeatherResponse>(
+    {} as WeatherResponse
+  );
   const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
