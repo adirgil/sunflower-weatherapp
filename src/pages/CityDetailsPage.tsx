@@ -1,17 +1,8 @@
-import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Box, Text, Spinner, Flex, Button } from "@chakra-ui/react";
 import { cities } from "../data/citiesData";
 import { motion } from "framer-motion";
 import { useCurrentWeather } from "../hooks/useCurrentWeather";
-
-const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
-
-type WeatherResponse = {
-  weather: { description: string; icon: string }[];
-  main: { temp: number; feels_like: number; humidity: number };
-  wind: { speed: number };
-};
 
 const CityDetailsPage = () => {
   const { cityId } = useParams<{ cityId: string }>();
