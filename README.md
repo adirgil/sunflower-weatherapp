@@ -1,46 +1,46 @@
-# Getting Started with Create React App
+### Sunflower - Cities and Weather App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A responsive weather app built with **React**, **TypeScript**, and **Chakra UI**
 
-## Available Scripts
-
-In the project directory, you can run:
+### Getting Started
 
 ### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Features
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- Search filter by name or country
+- Filter by continent
+- Sort by name or distance (from Tel Aviv)
+- Unit toggle (°C / °F)
+- Responsive design with animations
+- Weather details + current temperature using OpenWeather API
 
-### `npm test`
+### Libraries u might not know
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Chakra UI** layout and styling system
+- **Framer Motion** smooth, declarative animations
+- **use-query-params** keeps filters synced with the URL hook
+- **@turf/distance** geolocation distance calculations
 
-### `npm run build`
+### Notes!
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Forecast was intentionally excluded due to API limitations.
+  OpenWeather's onecall v2.5 endpoint was deprecated in June 2024 and replaced by v3.0, which requires a paid subscription. I used only the free current weather API.
+  deprecation link - https://openweathermap.org/api/one-call-api
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- Query params (search, sort, unit, continent) are preserved across pages.
+  I chose to store filters and UI state in the URL (via query params), rather than global state.
+  This allows users to:
+  - Share filtered links
+  - Refresh without losing context
+  - Navigate between pages with consistent state
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Screenshots
 
-### `npm run eject`
+- Main Page
+  ![Main page Desktop](./public/screenshots/main-desktop.png)
+  ![Main page Mobile](./public/screenshots/main-mobile.png)
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Details Page
+  ![Details page Desktop](./public/screenshots/details-desktop.png)
+  ![Details page Mobile](./public/screenshots/details-mobile.png)
