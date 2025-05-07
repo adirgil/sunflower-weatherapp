@@ -3,6 +3,7 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Box, Text, Spinner, Flex, Button } from "@chakra-ui/react";
 import { cities } from "../data/citiesData";
 import { motion } from "framer-motion";
+import { useCurrentWeather } from "../hooks/useCurrentWeather";
 
 const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
 
@@ -18,44 +19,23 @@ const CityDetailsPage = () => {
   const unit = searchParams.get("unit") || "c";
 
   const city = cities.find((c) => c.id.toString() === cityId);
-  const [weather, setWeather] = useState<WeatherResponse>(
-    {} as WeatherResponse
-  );
-  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
 
   const units = unit === "f" ? "imperial" : "metric";
   const symbol = unit === "f" ? "°F" : "°C";
 
+  const MotionBox = motion(Box);
+  const { weather, loading, error } = useCurrentWeather(
+    city?.coords.lat ?? 0,
+    city?.coords.lng ?? 0,
+    units
+  );
+
   console.log("weather", weather);
 
-  const MotionBox = motion(Box);
-
-  useEffect(() => {
-    if (!city) return;
-
-    const fetchWeather = async () => {
-      try {
-        const response = await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${city.coords.lat}&lon=${city.coords.lng}&units=${units}&appid=${API_KEY}`
-        );
-
-        if (!response.ok) throw new Error("Weather fetch failed");
-
-        const data = await response.json();
-        setWeather(data);
-      } catch (error) {
-        console.error("Error fetching weather:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchWeather();
-  }, [city, units]);
-
   if (!city) return <Text>City not found</Text>;
+  if (error) return <Text>{error}</Text>;
   if (loading)
     return (
       <Box w="full" display="flex" justifyContent="center" mt="100px">
@@ -91,17 +71,17 @@ const CityDetailsPage = () => {
       </Text>
       <Box mb={4}>
         <img
-          src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
-          alt={weather.weather[0].description}
+          src={`https://openweathermap.org/img/wn/${weather?.weather[0].icon}@2x.png`}
+          alt={weather?.weather[0].description}
           style={{ margin: "0 auto" }}
         />
       </Box>
       <Text fontSize="4xl" fontWeight="bold" mb={1}>
-        {Math.round(weather.main.temp)}
+        {Math.round(weather?.main.temp ?? 0)}
         {symbol}
       </Text>
       <Text fontSize="md" color="gray.600" textTransform="capitalize">
-        {weather.weather[0].description}
+        {weather?.weather[0].description}
       </Text>
       <Flex
         justify="space-around"
@@ -115,17 +95,17 @@ const CityDetailsPage = () => {
         <Box>
           <Text fontWeight="medium">Feels like</Text>
           <Text>
-            {Math.round(weather.main.feels_like)}
+            {Math.round(weather?.main.feels_like ?? 0)}
             {symbol}
           </Text>
         </Box>
         <Box>
           <Text fontWeight="medium">Humidity</Text>
-          <Text>{weather.main.humidity}%</Text>
+          <Text>{weather?.main.humidity}%</Text>
         </Box>
         <Box>
           <Text fontWeight="medium">Wind</Text>
-          <Text>{weather.wind.speed} m/s</Text>
+          <Text>{weather?.wind.speed} m/s</Text>
         </Box>
       </Flex>
     </MotionBox>
